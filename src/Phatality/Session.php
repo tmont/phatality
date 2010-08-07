@@ -76,8 +76,10 @@
 
 			$this->notifyListeners('beforeLoad', $event);
 
-			$entity = $this->cache->get($id, $type);
-			if ($entity === null) {
+			$cacheEntry = $this->cache->get($id, $type);
+			if ($cacheEntry !== null) {
+				$entity = $cacheEntry->getValue();
+			} else {
 				$entity = $this->getPersister($type)->load($id, $type);
 				$this->cache->set(new Entity($entity, $id));
 			}

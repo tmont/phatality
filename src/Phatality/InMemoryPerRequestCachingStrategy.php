@@ -11,7 +11,7 @@
 		}
 		
 		public function set(Entity $entity) {
-			self::$cache[$this->generateKeyFromEntity($entity)] = $entity;
+			self::$cache[$this->generateKey($entity->getId(), $entity->getType())] = new CacheEntry(time(), $entity->getObject());
 		}
 		
 		public function remove($id, $type) {
@@ -30,13 +30,6 @@
 			return $type . '|' . serialize($id);
 		}
 
-		public function generateKeyFromEntity($entity) {
-			if ($entity instanceof Identifiable) {
-				return $this->generateKey($entity->getId(), get_class($entity));
-			}
-
-			return get_class($entity) . '|' . serialize($entity);
-		}
 	}
 	
 ?>

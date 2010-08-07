@@ -5,6 +5,7 @@
 	use Phatality\Session;
 	use Phatality\EntityMap;
 	use Phatality\Entity;
+	use Phatality\CacheEntry;
 
 	class SessionLoadTests extends \PHPUnit_Framework_TestCase {
 
@@ -37,7 +38,7 @@
 			$entity = new FakeEntity(7);
 			
 			$cache = $this->getMock('Phatality\Cache');
-			$cache->expects($this->any())->method('get')->will($this->returnValue($entity));
+			$cache->expects($this->once())->method('get')->will($this->returnValue(new CacheEntry(time(), $entity)));
 
 			//the persister should never load the entity
 			$session = $this->getMock('Phatality\Session', array('notifyListeners', 'getPersister'), array(new EntityMap(), $cache));

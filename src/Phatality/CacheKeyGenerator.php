@@ -11,13 +11,6 @@
 		 * @return vostringid
 		 */
 		function generateKey($id, $type);
-
-		/**
-		 * Generates a unique key for the given entity
-		 *
-		 * @param object $entity
-		 * @return string
-		 */
-		function generateKeyFromEntity($entity);
 	}
+	
 ?>
