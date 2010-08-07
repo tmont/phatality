@@ -6,7 +6,7 @@
 
 		private $id;
 		private $entityMap;
-		private $cachingStrategy;
+		private $cache;
 		private $listeners = array();
 		private static $events = array(
 			'beforeDelete', 'afterDelete',
@@ -17,10 +17,10 @@
 			'beforeMerge', 'afterMerge'
 		);
 
-		public function __construct(EntityMap $entityMap, CachingStrategy $cachingStrategy) {
+		public function __construct(EntityMap $entityMap, Cache $cache) {
 			$this->id = Util::generateId();
 			$this->entityMap = $entityMap;
-			$this->cachingStrategy = $cachingStrategy;
+			$this->cache = $cache;
 		}
 
 		public function getId() {
@@ -28,7 +28,7 @@
 		}
 
 		public function getCachingStrategy() {
-			return $this->cachingStrategy;
+			return $this->cache;
 		}
 
 		public function getEntityMap() {
@@ -53,11 +53,7 @@
 		}
 
 		protected function notifyListeners($eventName, PersisterEvent $event) {
-			if (!isset($this->listeners[$eventName])) {
-				return;
-			}
-
-			foreach ($this->listeners[$eventName] as $listener) {
+			foreach ($this->getListeners($eventName) as $listener) {
 				$listener->notify($event);
 			}
 		}
@@ -68,10 +64,7 @@
 		public function insertOrUpdate($entity) {}
 		public function mergeAndUpdate($entity) {}
 		public function evict($id, $type) {}
-
 		public function purge() {}
-		public function isDirty() {}
-		public function isValid() {}
 
 		/**
 		 * @param mixed $id
@@ -83,10 +76,10 @@
 
 			$this->notifyListeners('beforeLoad', $event);
 
-			$entity = $this->cachingStrategy->get($id, $type);
+			$entity = $this->cache->get($id, $type);
 			if ($entity === null) {
 				$entity = $this->getPersister($type)->load($id, $type);
-				$this->cachingStrategy->set(new Entity($entity, $id));
+				$this->cache->set(new Entity($entity, $id));
 			}
 			$event->setReturnValue($entity);
 

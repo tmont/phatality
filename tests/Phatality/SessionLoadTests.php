@@ -4,14 +4,16 @@
 
 	use Phatality\Session;
 	use Phatality\EntityMap;
+	use Phatality\Entity;
 
-	class SessionTest extends \PHPUnit_Framework_TestCase {
+	class SessionLoadTests extends \PHPUnit_Framework_TestCase {
 
-		public function testLoad() {
-			$cache = $this->getMock('Phatality\CachingStrategy');
-			$cache->expects($this->any())->method('get')->will($this->returnValue(null));
-
+		public function testLoadEntityAndAddToCache() {
 			$entity = new FakeEntity(7);
+			
+			$cache = $this->getMock('Phatality\Cache');
+			$cache->expects($this->once())->method('get')->will($this->returnValue(null));
+			$cache->expects($this->once())->method('set')->with(new Entity($entity, 7));
 
 			$persister = $this->getMock('Phatality\Persister');
 			$persister
@@ -21,6 +23,7 @@
 				->will($this->returnValue($entity));
 
 			$session = $this->getMock('Phatality\Session', array('notifyListeners', 'getPersister'), array(new EntityMap(), $cache));
+			$session->expects($this->any())->method('notifyListeners');
 			$session
 				->expects($this->once())
 				->method('getPersister')
@@ -30,10 +33,10 @@
 			self::assertSame($entity, $session->load(7, 'Phatality\Tests\FakeEntity'));
 		}
 
-		public function testLoadShouldUseCache() {
+		public function testLoadShouldGetFromCacheAndNotUsePersister() {
 			$entity = new FakeEntity(7);
 			
-			$cache = $this->getMock('Phatality\CachingStrategy');
+			$cache = $this->getMock('Phatality\Cache');
 			$cache->expects($this->any())->method('get')->will($this->returnValue($entity));
 
 			//the persister should never load the entity
@@ -46,7 +49,7 @@
 		public function testLoadShouldFireApproriateEvents() {
 			$entity = new FakeEntity(7);
 
-			$cache = $this->getMock('Phatality\CachingStrategy');
+			$cache = $this->getMock('Phatality\Cache');
 			$cache->expects($this->any())->method('get')->will($this->returnValue(null));
 
 			$persister = $this->getMock('Phatality\Persister');

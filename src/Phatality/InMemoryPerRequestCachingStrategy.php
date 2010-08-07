@@ -2,7 +2,7 @@
 
 	namespace Phatality;
 
-	class InMemoryPerRequestCachingStrategy implements CachingStrategy, CacheKeyGenerator {
+	class InMemoryPerRequestCachingStrategy implements Cache, CacheKeyGenerator {
 		
 		private static $cache = array();
 

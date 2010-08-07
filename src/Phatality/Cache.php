@@ -4,7 +4,7 @@
 
 	use Countable;
 
-	interface CachingStrategy extends Countable {
+	interface Cache extends Countable {
 		function get($id, $type);
 		function set(Entity $entity);
 		function remove($id, $type);
