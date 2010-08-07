@@ -18,7 +18,7 @@
 		}
 		
 		public function update(Entity $entity) {}
-		public function delete(Entity $entity) {}
+		public function delete($id, $type) {}
 		public function load($id, $type) {}
 		public function fetchAll($id, $type) {}
 		public function insertOrUpdate(Entity $entity) {}

@@ -58,6 +58,10 @@
 			}
 		}
 
+		/**
+		 * @param mixed $id
+		 * @param string $type
+		 */
 		public function delete($id, $type) {
 			Commander::create()
 				->add(new EventCommand($this->getListeners('beforeDelete'), $this))
@@ -72,7 +76,7 @@
 		public function mergeAndUpdate($entity) {}
 
 		/**
-		 * Removes an entity from the session cache
+		 * Removes an entity from the session
 		 *
 		 * @param mixed $id
 		 * @param string $type
@@ -82,7 +86,7 @@
 		}
 
 		/**
-		 * Removes all entities from the session cache
+		 * Removes all entities from the session
 		 */
 		public function purge() {
 			$this->cache->clear();

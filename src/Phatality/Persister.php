@@ -5,7 +5,7 @@
 	interface Persister {
 		function insert(Entity $entity);
 		function update(Entity $entity);
-		function delete(Entity $entity);
+		function delete($id, $type);
 
 		/**
 		 * Loads an entity into the session based on its unique ID and object type
