@@ -3,7 +3,7 @@
 	namespace Phatality;
 
 	interface EventListener {
-		function notify(Observable $subject);
+		function notify(PersisterEvent $event);
 	}
 
 ?>

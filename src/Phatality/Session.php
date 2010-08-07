@@ -36,7 +36,7 @@
 		}
 
 		public final function addListener($eventName, EventListener $listener) {
-			if (!isset(self::$events[$eventName])) {
+			if (!in_array($eventName, self::$events)) {
 				throw new InvalidEventException(sprintf('The event "%s" does not exist in class "%s"', $eventName, __CLASS__));
 			}
 
@@ -76,7 +76,7 @@
 		/**
 		 * @param mixed $id
 		 * @param string $type
-		 * @return object An object of type $type
+		 * @return object
 		 */
 		public function load($id, $type) {
 			$event = new LoadEvent($id, $type, $this);

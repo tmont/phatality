@@ -5,7 +5,6 @@
 	class LoadEvent implements PersisterEvent {
 
 		private $returnValue;
-		private $exception;
 		private $entityType;
 		private $entityId;
 		private $session;
