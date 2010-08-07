@@ -2,7 +2,7 @@
 
 	namespace Phatality;
 
-	class Session implements Observable {
+	class Session implements Observable, PersisterLocator {
 
 		private $id;
 		private $entityMap;
@@ -58,7 +58,14 @@
 			}
 		}
 
-		public function delete($id, $type) {}
+		public function delete($id, $type) {
+			Commander::create()
+				->add(new EventCommand($this->getListeners('beforeDelete'), $this))
+				->add(new DeleteEntityCommand($this->cache, $this))
+				->add(new EventCommand($this->getListeners('afterDelete'), $this))
+				->execute(new DeleteEvent($id, $type, $this));
+		}
+
 		public function insert($entity) {}
 		public function update($entity) {}
 		public function insertOrUpdate($entity) {}
@@ -87,29 +94,22 @@
 		 * @return object
 		 */
 		public function load($id, $type) {
-			$event = new LoadEvent($id, $type, $this);
+			$context = new LoadEvent($id, $type, $this);
+			
+			Commander::create()
+				->add(new EventCommand($this->getListeners('beforeLoad'), $this))
+				->add(new LoadEntityCommand($this->cache, $this))
+				->add(new EventCommand($this->getListeners('afterLoad'), $this))
+				->execute($context);
 
-			$this->notifyListeners('beforeLoad', $event);
-
-			$cacheEntry = $this->cache->get($id, $type);
-			if ($cacheEntry !== null) {
-				$entity = $cacheEntry->getValue();
-			} else {
-				$entity = $this->getPersister($type)->load($id, $type);
-				$this->cache->set(new Entity($entity, $id));
-			}
-			$event->setReturnValue($entity);
-
-			$this->notifyListeners('afterLoad', $event);
-
-			return $event->getReturnValue();
+			return $context->getReturnValue();
 		}
 
 		/**
 		 * @param string $entityType
 		 * @return Persister
 		 */
-		protected function getPersister($entityType) {
+		public function getPersister($entityType) {
 			return $this->entityMap[$entityType]->getPersister();
 		}
 

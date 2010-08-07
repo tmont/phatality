@@ -2,7 +2,7 @@
 
 	namespace Phatality;
 
-	class LoadEvent implements PersisterEvent, CommandContext {
+	class DeleteEvent implements PersisterEvent, CommandContext {
 
 		private $returnValue;
 		private $entityType;
@@ -44,5 +44,5 @@
 			return $this->canceled === false;
 		}
 	}
-	
+
 ?>
