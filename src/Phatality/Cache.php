@@ -32,7 +32,7 @@
 		/**
 		 * Clears the cache
 		 */
-		function purge();
+		function clear();
 	}
 	
 ?>

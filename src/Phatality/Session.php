@@ -63,8 +63,23 @@
 		public function update($entity) {}
 		public function insertOrUpdate($entity) {}
 		public function mergeAndUpdate($entity) {}
-		public function evict($id, $type) {}
-		public function purge() {}
+
+		/**
+		 * Removes an entity from the session cache
+		 *
+		 * @param mixed $id
+		 * @param string $type
+		 */
+		public function evict($id, $type) {
+			$this->cache->remove($id, $type);
+		}
+
+		/**
+		 * Removes all entities from the session cache
+		 */
+		public function purge() {
+			$this->cache->clear();
+		}
 
 		/**
 		 * @param mixed $id

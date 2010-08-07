@@ -18,7 +18,7 @@
 			unset(self::$cache[$this->generateKey($id, $type)]);
 		}
 		
-		public function purge() {
+		public function clear() {
 			self::$cache = array();
 		}
 
