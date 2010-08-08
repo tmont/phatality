@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:attribute name="getter" default="publicField">
+		<xs:annotation>
+			<xs:documentation>The strategy to use to retrieve the value of a property (the default is publicField)</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="accessorMethod"/>
+				<xs:enumeration value="magicMethod"/>
+				<xs:enumeration value="publicField"/>
+				<xs:enumeration value="reflectedPrivateField"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:attribute>
+
+	<xs:attribute name="setter" default="publicField">
+		<xs:annotation>
+			<xs:documentation>The strategy to use to set the value of a property (the default is publicField)</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="accessorMethod">
+					<xs:annotation>
+						<xs:documentation>
+							Assumes there is a public method (for a property named "foo", the method would be 
+							"setFoo") that takes one argument and sets the property to the value of the argument
+						</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="magicMethod"/>
+				<xs:enumeration value="publicField"/>
+				<xs:enumeration value="reflectedPrivateField"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:attribute>
+
+	<xs:attribute name="name" type="xs:string" />
+
+	<xs:complexType name="idType" abstract="true" />
+
+	<xs:complexType name="single">
+		<xs:annotation>
+			<xs:documentation>Primary key implemented as a single column</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="idType">
+				<xs:attribute ref="name" use="required" />
+				<xs:attribute ref="getter"/>
+				<xs:attribute ref="setter"/>
+				<xs:attribute name="generator" use="required">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="singleAutoIncrement">
+								<xs:annotation>
+									<xs:documentation>
+										Integral identifiers that automatically increment on each insert
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="uuid">
+								<xs:annotation>
+									<xs:documentation>
+										Uses UUIDs (RFC 4122 v3) as the unique identifier
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+							<xs:enumeration value="uuidComb">
+								<xs:annotation>
+									<xs:documentation>
+										Uses semi-sequential UUIDs (RFC 4122 v3) as the unique identifer
+									</xs:documentation>
+								</xs:annotation>
+							</xs:enumeration>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="column" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="composite">
+		<xs:annotation>
+			<xs:documentation>Primary key implemented as multiple columns</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="idType">
+				<xs:sequence>
+					<xs:element name="column" minOccurs="2" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:attribute ref="name" use="required"/>
+							<xs:attribute name="property" type="xs:string" use="required"/>
+							<xs:attribute name="isAutoIncrement" type="xs:boolean" default="false"/>
+							<xs:attribute ref="getter"/>
+							<xs:attribute ref="setter"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="generator" use="required">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="compositeAutoIncrement"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="phatality-mapping">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="class">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="id" maxOccurs="1" minOccurs="1" type="idType"/>
+							<xs:element name="property" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute ref="name" use="required" />
+									<xs:attribute name="column" type="xs:string"/>
+									<xs:attribute ref="getter" />
+									<xs:attribute ref="setter" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute ref="name" use="required" />
+						<xs:attribute name="source" type="xs:string" use="required">
+							<xs:annotation>
+								<xs:documentation>
+									For databases, should be in the form tablename.database; for files, the path to the local file or URL
+								</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute ref="getter" />
+						<xs:attribute ref="setter" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="persister" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
