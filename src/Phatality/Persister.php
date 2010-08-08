@@ -3,12 +3,23 @@
 	namespace Phatality;
 
 	interface Persister {
+		/**
+		 * @param Entity $entity
+		 * @return Entity
+		 */
 		function insert(Entity $entity);
 		function update(Entity $entity);
+
+		/**
+		 * Deletes an entity
+		 *
+		 * @param mixed $id
+		 * @param string $type
+		 */
 		function delete($id, $type);
 
 		/**
-		 * Loads an entity into the session based on its unique ID and object type
+		 * Loads an entity based on its unique ID and object type
 		 * 
 		 * @param mixed $id
 		 * @param string $type
@@ -19,6 +30,13 @@
 		function fetchAll($id, $type);
 		function insertOrUpdate(Entity $entity);
 		function replace(Entity $entity);
+
+		/**
+		 * Returns an object to enable custom query building
+		 * 
+		 * @return Connection
+		 */
+		function getConnection();
 	}
 
 ?>

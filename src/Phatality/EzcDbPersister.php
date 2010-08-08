@@ -2,14 +2,14 @@
 
 	namespace Phatality;
 
-	use ezcDbHandler;
+	use Phatality\Persistence\Connection;
 
 	class EzcDbPersister implements Persister {
 
-		private $dbh;
+		private $connection;
 
-		public function __construct(ezcDbHandler $dbh) {
-			$this->dbh = $dbh;
+		public function __construct(Connection $connection) {
+			$this->connection = $connection;
 		}
 
 		public function insert(Entity $entity) {
@@ -23,6 +23,10 @@
 		public function fetchAll($id, $type) {}
 		public function insertOrUpdate(Entity $entity) {}
 		public function replace(Entity $entity) {}
+
+		public function getConnection() {
+			return $this->connection;
+		}
 	}
 	
 ?>

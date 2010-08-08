@@ -22,13 +22,10 @@
 		}
 
 		/**
-		 * Creates a persister
-		 *
-		 * @throws InvalidArgumentException
 		 * @param string $persisterType
 		 * @return Persister
 		 */
-		public function createPersister($persisterType) {
+		private function createPersister($persisterType) {
 			self::$registry[$persisterType] = new $persisterType($this->config->getSection('persisters')->getValue($persisterType));
 			return self::$registry[$persisterType];
 		}

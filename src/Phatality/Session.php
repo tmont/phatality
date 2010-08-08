@@ -2,7 +2,7 @@
 
 	namespace Phatality;
 
-	class Session implements Observable, PersisterLocator {
+	class Session implements Observable, PersisterLocator, Identifiable {
 
 		private $id;
 		private $entityMap;
@@ -70,10 +70,24 @@
 				->execute(new DeleteEvent($id, $type, $this));
 		}
 
-		public function insert($entity) {}
-		public function update($entity) {}
-		public function insertOrUpdate($entity) {}
-		public function mergeAndUpdate($entity) {}
+		/**
+		 * @param Identifiable $entity
+		 * @return mixed The new ID of the inserted entity
+		 */
+		public function insert(Identifiable $entity) {
+			$context = new InsertEvent(new Entity($entity, $this->entityMap[get_class($entity)]), $this);
+			Commander::create()
+				->add(new EventCommand($this->getListeners('beforeInsert'), $this))
+				->add(new InsertEntityCommand($this->cache, $this))
+				->add(new EventCommand($this->getListeners('afterInsert'), $this))
+				->execute($context);
+
+			return $context->returnValue;
+		}
+
+		public function update(Identifiable $entity) {}
+		public function insertOrUpdate(Identifiable $entity) {}
+		public function mergeAndUpdate(Identifiable $entity) {}
 
 		/**
 		 * Removes an entity from the session
