@@ -109,6 +109,13 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+	<xs:attributeGroup name="propertyMappingAttributes">
+		<xs:attribute ref="name" use="required" />
+		<xs:attribute name="column" type="xs:string"/>
+		<xs:attribute ref="getter" />
+		<xs:attribute ref="setter" />
+	</xs:attributeGroup>
+
 	<xs:element name="phatality-mapping">
 		<xs:complexType>
 			<xs:sequence>
@@ -118,10 +125,13 @@
 							<xs:element name="id" maxOccurs="1" minOccurs="1" type="idType"/>
 							<xs:element name="property" minOccurs="0" maxOccurs="unbounded">
 								<xs:complexType>
-									<xs:attribute ref="name" use="required" />
-									<xs:attribute name="column" type="xs:string"/>
-									<xs:attribute ref="getter" />
-									<xs:attribute ref="setter" />
+									<xs:attributeGroup ref="propertyMappingAttributes"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="many-to-one" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attributeGroup ref="propertyMappingAttributes"/>
+									<xs:attribute name="class" type="xs:string" use="required"/>
 								</xs:complexType>
 							</xs:element>
 						</xs:sequence>
