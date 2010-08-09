@@ -1,8 +1,9 @@
 <?php
 
-	namespace Phatality;
+	namespace Phatality\Persistence;
 
 	use Serializable;
+	use Phatality\Config;
 
 	class PersisterRegistry implements Serializable {
 

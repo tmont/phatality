@@ -1,6 +1,6 @@
 <?php
 
-	namespace Phatality;
+	namespace Phatality\Id;
 
 	class CompositeAutoIncrementIdGenerator implements IdGenerator {
 
@@ -15,7 +15,7 @@
 			$this->table = $table;
 		}
 
-		public function generateId(Session $session, Identifiable $entity) {
+		public function generateId(Session $session, $entity) {
 			$id = (array)$entity->getId();
 			$type = get_class($entity);
 			$this->verifyId($id, $type);
@@ -44,6 +44,9 @@
 			}
 		}
 
+		public function requiresIdOnInsert() {
+			return false;
+		}
 	}
 	
 ?>

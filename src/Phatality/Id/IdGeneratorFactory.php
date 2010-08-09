@@ -1,11 +1,13 @@
 <?php
 
-	namespace Phatality;
+	namespace Phatality\Id;
 
 	interface IdGeneratorFactory {
 
+		/**
+		 * @return IdGenerator
+		 */
 		function getIdGenerator();
-
 	}
 	
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-	namespace Phatality;
+	namespace Phatality\Id;
 
 	interface IdGenerator {
 
@@ -8,10 +8,10 @@
 		 * Generates an ID for an entity
 		 *
 		 * @param Session $session
-		 * @param Identifiable $entity
+		 * @param object $entity
 		 * @return mixed
 		 */
-		function generateId(Session $session, Identifiable $entity);
+		function generateId(Session $session, $entity);
 
 		/**
 		 * @return bool

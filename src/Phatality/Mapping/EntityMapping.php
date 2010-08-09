@@ -3,9 +3,9 @@
 	namespace Phatality\Mapping;
 
 	use Serializable;
-	use Phatality\IdGeneratorFactory;
+	use Phatality\Id\IdGeneratorFactory;
 	use Phatality\PersisterRegistry;
-	use Phatality\StaticIdGeneratorFactory;
+	use Phatality\Id\StaticIdGeneratorFactory;
 
 	abstract class EntityMapping implements Serializable, IdGeneratorFactory {
 

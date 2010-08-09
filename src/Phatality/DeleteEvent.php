@@ -2,6 +2,8 @@
 
 	namespace Phatality;
 
+	use Phatality\Persistence\PersisterEvent;
+
 	class DeleteEvent implements PersisterEvent, CommandContext {
 
 		private $returnValue;

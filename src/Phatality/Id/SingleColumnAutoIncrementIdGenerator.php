@@ -1,6 +1,6 @@
 <?php
 
-	namespace Foo;
+	namespace Phatality\Id;
 
 	class SingleColumnAutoIncrementIdGenerator {
 	

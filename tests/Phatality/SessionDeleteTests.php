@@ -3,17 +3,17 @@
 	namespace Phatality\Tests;
 
 	use Phatality\Session;
-	use Phatality\EntityMap;
+	use Phatality\Mapping\EntityMap;
 	use Phatality\Entity;
-	use Phatality\CacheEntry;
+	use Phatality\Cache\CacheEntry;
 
 	class SessionDeleteTests extends \PHPUnit_Framework_TestCase {
 
 		public function testDeleteEntityAndRemoveFromCache() {
-			$cache = $this->getMock('Phatality\Cache');
+			$cache = $this->getMock('Phatality\Cache\Cache');
 			$cache->expects($this->once())->method('remove')->with(7, 'Phatality\Tests\FakeEntity');
 
-			$persister = $this->getMock('Phatality\Persister');
+			$persister = $this->getMock('Phatality\Persistence\Persister');
 			$persister
 				->expects($this->once())
 				->method('delete')
@@ -31,9 +31,9 @@
 		}
 
 		public function testDeleteShouldFireApproriateEvents() {
-			$cache = $this->getMock('Phatality\Cache');
+			$cache = $this->getMock('Phatality\Cache\Cache');
 
-			$persister = $this->getMock('Phatality\Persister');
+			$persister = $this->getMock('Phatality\Persistence\Persister');
 
 			$session = $this->getMock('Phatality\Session', array('getPersister'), array(new EntityMap(), $cache));
 			$session

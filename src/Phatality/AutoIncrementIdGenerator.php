@@ -1,6 +1,6 @@
 <?php
 
-	namespace Phatality;
+	namespace Phatality\Id;
 
 	class AutoIncrementIdGenerator implements IdGenerator {
 
@@ -11,7 +11,7 @@
 			$this->mappingInfo = $mappingInfo;
 		}
 
-		public function generateId(Session $session, Identifiable $entity) {
+		public function generateId(Session $session, $entity) {
 			//TODO This needs to be fixed, it doesn't work for anything
 			if ($this->next === null) {
 				$conn = $session->getPersister(get_class($entity))->getConnection();

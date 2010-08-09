@@ -2,6 +2,8 @@
 
 	namespace Phatality;
 
+	use Phatality\Persistence\PersisterEvent;
+
 	class InsertEvent implements PersisterEvent, CommandContext {
 
 		private $returnValue;

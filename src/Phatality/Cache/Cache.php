@@ -3,6 +3,7 @@
 	namespace Phatality\Cache;
 
 	use Countable;
+	use Phatality\Entity;
 
 	interface Cache extends Countable {
 		/**

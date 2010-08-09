@@ -1,6 +1,8 @@
 <?php
 
-	namespace Phatality;
+	namespace Phatality\Id;
+
+	use Exception;
 
 	class InvalidIdException extends Exception {}
 	

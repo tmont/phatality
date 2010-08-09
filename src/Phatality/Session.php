@@ -2,6 +2,11 @@
 
 	namespace Phatality;
 
+	use Phatality\Persistence\PersisterLocator;
+	use Phatality\Persistence\PersisterEvent;
+	use Phatality\Mapping\EntityMap;
+	use Phatality\Cache\Cache;
+
 	class Session implements Observable, PersisterLocator, Identifiable {
 
 		private $id;

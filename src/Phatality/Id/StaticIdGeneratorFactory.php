@@ -1,10 +1,12 @@
 <?php
 
-	namespace Foo;
+	namespace Phatality\Id;
+
+	use InvalidArgumentException, ReflectionClass;
 
 	class StaticIdGeneratorFactory {
 
-		private static $idGeneratorInterface = 'Phatality\IdGenerator';
+		private static $idGeneratorInterface = 'Phatality\Id\IdGenerator';
 
 		public static function getIdGenerator($type, array $args = array()) {
 			if (!class_exists($type)) {

@@ -2,6 +2,9 @@
 
 	namespace Phatality;
 
+	use Phatality\Persistence\PersisterLocator;
+	use Phatality\Persistence\PersisterEvent;
+
 	class EventCommand implements Command {
 
 		private $listeners;

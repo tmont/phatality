@@ -1,8 +1,8 @@
 <?php
 
-	namespace Phatality;
+	namespace Phatality\Persistence;
 
-	use Phatality\Persistence\Connection;
+	use Phatality\Entity;
 
 	class PdoPersister implements Persister {
 

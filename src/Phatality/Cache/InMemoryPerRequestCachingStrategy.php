@@ -2,6 +2,8 @@
 
 	namespace Phatality\Cache;
 
+	use Phatality\Entity;
+
 	class InMemoryPerRequestCachingStrategy implements Cache, CacheKeyGenerator {
 		
 		private static $cache = array();

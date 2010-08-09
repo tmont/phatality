@@ -1,8 +1,6 @@
 <?php
 
-	namespace Phatality;
-
-	use Exception;
+	namespace Phatality\Persistence;
 
 	interface PersisterEvent {
 		function getReturnValue();

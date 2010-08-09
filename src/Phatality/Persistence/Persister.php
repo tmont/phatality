@@ -1,6 +1,8 @@
 <?php
 
-	namespace Phatality;
+	namespace Phatality\Persistence;
+
+	use Phatality\Entity;
 
 	interface Persister {
 		/**

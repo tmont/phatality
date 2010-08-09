@@ -2,6 +2,9 @@
 
 	namespace Phatality;
 
+	use Phatality\Persistence\PersisterLocator;
+	use Phatality\Cache\Cache;
+
 	class LoadEntityCommand implements Command {
 
 		private $cache;
@@ -24,7 +27,7 @@
 				$entity = $cacheEntry->getValue();
 			} else {
 				$entity = $this->persisterLocator->getPersister($type)->load($id, $type);
-				$this->cache->set(new Entity($entity, $id));
+				$this->cache->set(new Entity($entity));
 			}
 
 			$context->setReturnValue($entity);

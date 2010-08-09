@@ -2,6 +2,9 @@
 
 	namespace Phatality;
 
+	use Phatality\Persistence\PersisterLocator;
+	use Phatality\Cache\Cache;
+
 	class InsertEntityCommand implements Command {
 
 		private $cache;

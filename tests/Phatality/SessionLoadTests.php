@@ -3,20 +3,21 @@
 	namespace Phatality\Tests;
 
 	use Phatality\Session;
-	use Phatality\EntityMap;
 	use Phatality\Entity;
-	use Phatality\CacheEntry;
+	use Phatality\Mapping\EntityMap;
+	use Phatality\Cache\CacheEntry;
 
 	class SessionLoadTests extends \PHPUnit_Framework_TestCase {
 
 		public function testLoadEntityAndAddToCache() {
 			$entity = new FakeEntity(7);
-			
-			$cache = $this->getMock('Phatality\Cache');
-			$cache->expects($this->once())->method('get')->will($this->returnValue(null));
-			$cache->expects($this->once())->method('set')->with(new Entity($entity, 7));
 
-			$persister = $this->getMock('Phatality\Persister');
+			$cache = $this->getMock('Phatality\Cache\Cache');
+			$cache->expects($this->once())->method('get')->will($this->returnValue(null));
+			$entityMapping = $this->getMock('Phatality\Mapping\EntityMapping', array('getColumnMappings', 'getIdGeneratorType', 'getEntityType'), array(), '', false);
+			$cache->expects($this->once())->method('set')->with(new Entity($entity, $entityMapping));
+
+			$persister = $this->getMock('Phatality\Persistence\Persister');
 			$persister
 				->expects($this->once())
 				->method('load')
@@ -36,8 +37,8 @@
 
 		public function testLoadShouldGetFromCacheAndNotUsePersister() {
 			$entity = new FakeEntity(7);
-			
-			$cache = $this->getMock('Phatality\Cache');
+
+			$cache = $this->getMock('Phatality\Cache\Cache');
 			$cache->expects($this->once())->method('get')->will($this->returnValue(new CacheEntry(time(), $entity)));
 
 			//the persister should never load the entity
@@ -50,10 +51,10 @@
 		public function testLoadShouldFireApproriateEvents() {
 			$entity = new FakeEntity(7);
 
-			$cache = $this->getMock('Phatality\Cache');
+			$cache = $this->getMock('Phatality\Cache\Cache');
 			$cache->expects($this->any())->method('get')->will($this->returnValue(null));
 
-			$persister = $this->getMock('Phatality\Persister');
+			$persister = $this->getMock('Phatality\Persistence\Persister');
 			$persister
 				->expects($this->any())
 				->method('load')
@@ -80,7 +81,7 @@
 				\PHPUnit_Framework_Assert::assertEquals('Phatality\Tests\FakeEntity', $event->getEntityType());
 				\PHPUnit_Framework_Assert::assertSame($entity, $event->getReturnValue());
 			}));
-			
+
 			$session
 				->addListener('beforeLoad', $beforeLoadListener)
 				->addListener('afterLoad', $afterLoadListener);
@@ -90,5 +91,5 @@
 
 	}
 
-	
+
 ?>

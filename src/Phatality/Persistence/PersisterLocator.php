@@ -1,6 +1,6 @@
 <?php
 
-	namespace Phatality;
+	namespace Phatality\Persistence;
 
 	interface PersisterLocator {
 		

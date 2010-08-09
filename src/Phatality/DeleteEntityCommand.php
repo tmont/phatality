@@ -2,6 +2,9 @@
 
 	namespace Phatality;
 
+	use Phatality\Persistence\PersisterLocator;
+	use Phatality\Cache\Cache;
+
 	class DeleteEntityCommand implements Command {
 
 		private $cache;
