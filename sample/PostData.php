@@ -6,14 +6,11 @@
 	use Phatality\Mapping\Column;
 	use Phatality\Mapping\ForeignKey;
 
-	class PostData implements SourceData {
-
-		private $source = 'test.posts';
-		private $persisterType = 'Phatality\PdoPersister';
+	class PostData extends SourceData {
 
 		public function getForeignKeys() {
 			return array(
-				new ForeignKey($this->source, 'user_id', 'test.users', 'user_id')
+				new ForeignKey($this->getSource(), 'user_id', 'test.users', 'user_id')
 			);
 		}
 
@@ -24,19 +21,11 @@
 		}
 
 		public function getSource() {
-			return $this->source;
-		}
-
-		public function serialize() {
-			// TODO: Implement serialize() method.
-		}
-
-		public function unserialize($serialized) {
-			// TODO: Implement unserialize() method.
+			return 'test.posts';
 		}
 
 		public function getPersisterType() {
-			return $this->persisterType;
+			return 'Phatality\PdoPersister';
 		}
 
 		public function getColumns() {

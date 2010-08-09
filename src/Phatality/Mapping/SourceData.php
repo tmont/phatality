@@ -2,12 +2,20 @@
 
 	namespace Phatality\Mapping;
 
-	interface SourceData extends Serializable {
-		function getPrimaryKeys();
-		function getForeignKeys();
-		function getSource();
-		function getPersisterType();
-		function getColumns();
+	abstract class SourceData {
+
+		
+		public abstract function getPrimaryKeys();
+
+		public function getForeignKeys() {
+			return array();
+		}
+
+		public abstract function getSource();
+
+		public abstract function getPersisterType();
+		
+		public abstract function getColumns();
 	}
 	
 ?>
