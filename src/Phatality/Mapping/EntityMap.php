@@ -1,8 +1,9 @@
 <?php
 
-	namespace Phatality;
+	namespace Phatality\Mapping;
 
 	use Serializable, ArrayIterator;
+	use Phatality\Collection;
 
 	class EntityMap extends Collection implements Serializable {
 

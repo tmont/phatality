@@ -7,7 +7,7 @@
 		private $mappingInfo;
 		private $next;
 
-		public function __construct(MappingInfo $mappingInfo) {
+		public function __construct(SourceData $mappingInfo) {
 			$this->mappingInfo = $mappingInfo;
 		}
 
@@ -16,7 +16,7 @@
 			if ($this->next === null) {
 				$conn = $session->getPersister(get_class($entity))->getConnection();
 				$primaryKeys = $this->mappingInfo->getPrimaryKeys();
-				$query = sprintf('select max(%s) from %s', implode(', ', $primaryKeys), $this->mappingInfo->getTable());
+				$query = sprintf('select max(%s) from %s', implode(', ', $primaryKeys), $this->mappingInfo->getSource());
 				if (count($primaryKeys) > 1) {
 					$query .= "\nwhere ";
 					$whereClauses = array();

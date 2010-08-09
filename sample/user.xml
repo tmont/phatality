@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<phatality-mapping persister="pdo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../src/Phatality/Mapping/phatality-mapping.xsd">
+	<class name="Foo" source="test.foo" getter="accessorMethod" setter="accessorMethod">
+		<id xsi:type="single" name="id" setter="reflectedPrivateField" generator="singleAutoIncrement" column="foo_id" />
+		<!--<id xsi:type="composite" generator="compositeAutoIncrement">
+			<column isAutoIncrement="true" name="version" property="version" setter="reflectedPrivateField" />
+			<column isAutoIncrement="false" name="foo_id" property="id" setter="reflectedPrivateField" />
+		</id>-->
+
+		<property name="foo" />
+		<property name="status" column="foo_status" setter="reflectedPrivateField" />
+	</class>
+</phatality-mapping>
