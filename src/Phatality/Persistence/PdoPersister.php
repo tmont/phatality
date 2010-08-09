@@ -4,7 +4,7 @@
 
 	use Phatality\Persistence\Connection;
 
-	class EzcDbPersister implements Persister {
+	class PdoPersister implements Persister {
 
 		private $connection;
 
