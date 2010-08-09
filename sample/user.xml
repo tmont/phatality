@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<phatality-mapping persister="pdo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../src/Phatality/Mapping/phatality-mapping.xsd">
+	<class name="Phatality\Sample\User" source="test.users" getter="accessorMethod" setter="accessorMethod">
+		<id xsi:type="single" name="id" setter="reflectedPrivateField" generator="singleAutoIncrement" column="user_id" />
+
+		<property name="username" />
+		<property name="password" setter="reflectedPrivateField" />
+		<property name="firstName" column="first_name" />
+		<property name="lastName" column="last_name" />
+		<property name="locale" />
+		<property name="created" setter="reflectedPrivateField" />
+	</class>
+</phatality-mapping>
