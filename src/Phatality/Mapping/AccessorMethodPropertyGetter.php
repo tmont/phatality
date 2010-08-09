@@ -1,6 +1,8 @@
 <?php
 
-	namespace Phatality;
+	namespace Phatality\Mapping;
+
+	use Phatality\ReflectionCache;
 
 	class AccessorMethodPropertyGetter implements PropertyGetter {
 

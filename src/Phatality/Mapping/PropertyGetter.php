@@ -1,6 +1,6 @@
 <?php
 
-	namespace Phatality;
+	namespace Phatality\Mapping;
 
 	interface PropertyGetter {
 		function get($object, $propertyName);

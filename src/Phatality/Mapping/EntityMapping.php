@@ -4,7 +4,7 @@
 
 	use Serializable;
 	use Phatality\Id\IdGeneratorFactory;
-	use Phatality\PersisterRegistry;
+	use Phatality\Persistence\PersisterRegistry;
 	use Phatality\Id\StaticIdGeneratorFactory;
 
 	abstract class EntityMapping implements Serializable, IdGeneratorFactory {
@@ -26,10 +26,18 @@
 		}
 
 		public function loadEntity($entity, array $data) {
-			$columnMapping = $this->getColumnMappings();
+			$columnMappings = $this->getColumnMappings();
 
 			foreach ($data as $column => $value) {
-				
+				if (!isset($columnMappings[$column])) {
+					continue;
+				}
+
+				$data = $columnMappings[$column];
+				switch ($data['mapping']) {
+					case 'property':
+				        
+				}
 			}
 		}
 
@@ -39,6 +47,7 @@
 		protected abstract function getColumnMappings();
 
 		public abstract function getEntityType();
+
 		protected abstract function getIdGeneratorType();
 
 		/**
@@ -69,4 +78,4 @@
 
 	}
 
-?>
+	?>
