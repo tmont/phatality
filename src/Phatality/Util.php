@@ -55,6 +55,17 @@
 			$class = ReflectionCache::getClass($type);
 			return $class->newInstanceArgs();
 		}
+
+		public static function parseDataByPrefix(array $data, $prefix, $changeTo = '') {
+			$parsed = array();
+			foreach ($data as $key => $value) {
+				if (strpos($key, $prefix . '.') === 0) {
+					$parsed[str_replace($prefix . '.', empty($changeTo) ? '' : $changeTo . '.', $key)] = $value;
+				}
+			}
+
+			return $parsed;
+		}
 	
 	}
 

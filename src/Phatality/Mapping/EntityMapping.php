@@ -8,11 +8,13 @@
 	use Phatality\Id\StaticIdGeneratorFactory;
 	use Phatality\Util;
 
-	abstract class EntityMapping implements Serializable, IdGeneratorFactory {
+	abstract class EntityMapping implements Serializable, IdGeneratorFactory, PropertyMapperFactory {
 
 		private $persisterRegistry;
 		private $idGenerator;
 		private $sourceData;
+
+		const ThisPrefix = '_this';
 
 		protected function __construct(SourceData $sourceData, PersisterRegistry $persisterRegistry) {
 			$this->persisterRegistry = $persisterRegistry;
@@ -36,37 +38,24 @@
 			$accessorFactory = new PropertyAccessorFactory();
 			$defaultSetter = $accessorFactory->getSetter($this->getDefaultSetterType());
 
-			$defaultType = 'string';
-			foreach (self::parseDataByPrefix($data, '_this') as $column => $value) {
+			$propertyMapper = $this->getPropertyMapper(MapperType::Property, $object, $entityMap);
+			$manyToOneMapper = $this->getPropertyMapper(MapperType::ManyToOne, $object, $entityMap);
+
+			foreach (Util::parseDataByPrefix($data, self::ThisPrefix) as $column => $value) {
 				if (!isset($columnMappings[$column])) {
 					continue;
 				}
 
 				$mapData = $columnMappings[$column];
 				$setter = isset($mapData['setter']) ? $accessorFactory->getSetter($mapData['setter']) : $defaultSetter;
-				$targetType = isset($mapData['type']) ? $mapData['type'] : $defaultType;
+				$targetType = isset($mapData['type']) ? $mapData['type'] : 'string';
 
 				switch ($mapData['mapping']) {
-					case 'property':
-						$setter->set($object, $mapData['name'], Util::convertString($value, $targetType));
+					case MapperType::Property:
+						$propertyMapper->map($mapData['name'], $value, $targetType, $setter, $data);
 						break;
-					case 'many-to-one':
-						$targetObject = Util::createEntityInstance($targetType);
-						$joinedEntityMap = $entityMap[$targetType];
-						$joinData = self::parseDataByPrefix($data, $joinedEntityMap->getJoinAlias(), '_this');
-						$joinKey = $joinedEntityMap->getSourceData()->getPrimaryKeys();
-						if (count($joinKey) !== 1) {
-							throw new MappingException(
-								sprintf(
-									'Invalid primary key for entity "%s": cannot establish many-to-one relationship with entity "%s" because a suitable key was not found',
-									$targetType,
-									get_class($object)
-								)
-							);
-						}
-
-						$joinData['_this.' . $joinKey[0]->name] = $value; //set the join column value
-						$setter->set($object, $mapData['name'], $joinedEntityMap->loadEntity($targetObject, $joinData, $entityMap));
+					case MapperType::ManyToOne:
+						$manyToOneMapper->map($mapData['name'], $value, $targetType, $setter, $data);
 						break;
 					default:
 						throw new Exception('Not implemented yet');
@@ -76,15 +65,15 @@
 			return $object;
 		}
 
-		private static function parseDataByPrefix(array $data, $prefix, $changeTo = '') {
-			$parsed = array();
-			foreach ($data as $key => $value) {
-				if (strpos($key, $prefix . '.') === 0) {
-					$parsed[str_replace($prefix . '.', empty($changeTo) ? '' : $changeTo . '.', $key)] = $value;
-				}
+		public function getPropertyMapper($mapperType, $entity, EntityMap $entityMap) {
+			switch ($mapperType) {
+				case MapperType::Property:
+			        return new DirectValueMapper($entity);
+				case MapperType::ManyToOne:
+			        return new ManyToOneMapper($entity, $entityMap);
+				default:
+			        throw new InvalidArgumentException('Unknown mapper type: ' . $mapperType);
 			}
-
-			return $parsed;
 		}
 
 		/**
