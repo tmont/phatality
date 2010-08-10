@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 	<xs:attribute name="getter" default="publicField">
 		<xs:annotation>
@@ -36,9 +37,9 @@
 		</xs:simpleType>
 	</xs:attribute>
 
-	<xs:attribute name="name" type="xs:string" />
+	<xs:attribute name="name" type="xs:string"/>
 
-	<xs:complexType name="idType" abstract="true" />
+	<xs:complexType name="idType" abstract="true"/>
 
 	<xs:complexType name="single">
 		<xs:annotation>
@@ -46,7 +47,16 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="idType">
-				<xs:attribute ref="name" use="required" />
+				<xs:attribute ref="name" use="required"/>
+				<xs:attribute name="type" default="string">
+					<xs:simpleType>
+						<xs:restriction>
+							<xs:enumeration value="string"/>
+							<xs:enumeration value="int"/>
+							<xs:enumeration value="bool"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
 				<xs:attribute ref="getter"/>
 				<xs:attribute ref="setter"/>
 				<xs:attribute name="generator" use="required">
@@ -110,24 +120,26 @@
 	</xs:complexType>
 
 	<xs:attributeGroup name="propertyMappingAttributes">
-		<xs:attribute ref="name" use="required" />
+		<xs:attribute ref="name" use="required"/>
 		<xs:attribute name="column" type="xs:string"/>
-		<xs:attribute ref="getter" />
-		<xs:attribute ref="setter" />
+		<xs:attribute ref="getter"/>
+		<xs:attribute ref="setter"/>
 	</xs:attributeGroup>
 
 	<xs:element name="phatality-mapping">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="class">
+				<xs:element name="class" minOccurs="1" maxOccurs="unbounded">
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="id" maxOccurs="1" minOccurs="1" type="idType"/>
+
 							<xs:element name="property" minOccurs="0" maxOccurs="unbounded">
 								<xs:complexType>
 									<xs:attributeGroup ref="propertyMappingAttributes"/>
 								</xs:complexType>
 							</xs:element>
+
 							<xs:element name="many-to-one" minOccurs="0" maxOccurs="unbounded">
 								<xs:complexType>
 									<xs:attributeGroup ref="propertyMappingAttributes"/>
@@ -135,7 +147,9 @@
 								</xs:complexType>
 							</xs:element>
 						</xs:sequence>
-						<xs:attribute ref="name" use="required" />
+						
+						<xs:attribute ref="name" use="required"/>
+
 						<xs:attribute name="source" type="xs:string" use="required">
 							<xs:annotation>
 								<xs:documentation>
@@ -143,19 +157,22 @@
 								</xs:documentation>
 							</xs:annotation>
 						</xs:attribute>
-						<xs:attribute ref="getter" />
-						<xs:attribute ref="setter" />
+
+						<xs:attribute name="persister" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="pdo"/>
+									<xs:enumeration value="file"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+
+						<xs:attribute ref="getter"/>
+
+						<xs:attribute ref="setter"/>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="persister" use="required">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:enumeration value="pdo"/>
-						<xs:enumeration value="file"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

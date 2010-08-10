@@ -5,8 +5,13 @@
 	require_once dirname(__DIR__) . '/src/Phatality/bootstrap.php';
 	
 	spl_autoload_register(function($class) {
-		if (preg_match('/Phatality\\\Tests\\\.+/', $class)) {
+		if (strpos($class, 'Phatality\Tests\\') === 0) {
 			require_once __DIR__ . '/helpers.php';
+		} else if (strpos($class, 'Phatality\Sample\\') === 0) {
+			$file = dirname(__DIR__) . '/sample/' . str_replace('\\', '/', str_replace('Phatality\\Sample\\', '', $class)) . '.php';
+			if (is_file($file)) {
+				require_once $file;
+			}
 		}
 	});
 

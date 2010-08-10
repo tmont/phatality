@@ -1,6 +1,6 @@
 <?php
 
-	namespace Phatality\Sample;
+namespace Phatality\Sample;
 
 	use Phatality\Identifiable;
 
@@ -15,6 +15,13 @@
 			return $this->id;
 		}
 
+		public function setId($id) {
+			$this->id = $id;
+		}
+
+		/**
+		 * @return User
+		 */
 		public function getUser() {
 			return $this->user;
 		}
@@ -39,5 +46,5 @@
 			$this->title = $title;
 		}
 	}
-	
-?>
+
+	?>

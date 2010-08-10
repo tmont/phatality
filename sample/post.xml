@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<phatality-mapping persister="pdo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../src/Phatality/Mapping/phatality-mapping.xsd">
-	<class name="Phatality\Sample\Post" source="test.posts" getter="accessorMethod" setter="accessorMethod">
-		<id xsi:type="single" name="id" setter="reflectedPrivateField" generator="singleAutoIncrement" column="post_id" />
+<phatality-mapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../src/Phatality/Mapping/phatality-mapping.xsd">
+	<class name="Phatality\Sample\Post" source="test.posts" getter="accessorMethod" setter="accessorMethod" persister="pdo">
+		<id xsi:type="single" name="id" setter="reflectedPrivateField" generator="singleAutoIncrement" column="post_id" type="int" />
 
 		<property name="title" />
 		<property name="postData" column="postdata" />

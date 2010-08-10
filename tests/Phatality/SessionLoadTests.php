@@ -14,7 +14,8 @@
 
 			$cache = $this->getMock('Phatality\Cache\Cache');
 			$cache->expects($this->once())->method('get')->will($this->returnValue(null));
-			$entityMapping = $this->getMock('Phatality\Mapping\EntityMapping', array('getColumnMappings', 'getIdGeneratorType', 'getEntityType'), array(), '', false);
+			$methodsToMock = array('getColumnMappings', 'getIdGeneratorType', 'getEntityType', 'getDefaultGetterType', 'getDefaultSetterType', 'getJoinAlias');
+			$entityMapping = $this->getMock('Phatality\Mapping\EntityMapping', $methodsToMock, array(), '', false);
 			$cache->expects($this->once())->method('set')->with(new Entity($entity, $entityMapping));
 
 			$persister = $this->getMock('Phatality\Persistence\Persister');

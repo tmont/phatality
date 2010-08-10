@@ -3,7 +3,7 @@
 	namespace Phatality\Sample;
 
 	use Phatality\Mapping\EntityMapping;
-	use Phatality\PersisterRegistry;
+	use Phatality\Persistence\PersisterRegistry;
 
 	class UserEntityMapping extends EntityMapping {
 
@@ -13,7 +13,7 @@
 
 		protected function getColumnMappings() {
 			return array(
-				'user_id' => array('name' => 'id', 'mapping' => 'property'),
+				'user_id' => array('name' => 'id', 'mapping' => 'property', 'type' => 'int'),
 				'username' => array('name' => 'username', 'mapping' => 'property'),
 				'password' => array('name' => 'password', 'mapping' => 'property'),
 				'first_name' => array('name' => 'firstName', 'mapping' => 'property'),
@@ -28,7 +28,19 @@
 		}
 
 		public function getEntityType() {
-			return 'Phatality\Post';
+			return 'Phatality\Sample\User';
+		}
+
+		protected function getDefaultGetterType() {
+			return 'accessorMethod';
+		}
+
+		protected function getDefaultSetterType() {
+			return 'accessorMethod';
+		}
+
+		public function getJoinAlias() {
+			return '_user';
 		}
 	}
 	
