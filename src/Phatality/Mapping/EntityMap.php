@@ -7,6 +7,10 @@
 
 	class EntityMap extends Collection implements Serializable {
 
+		public function __construct(array $initialData = array()) {
+			parent::__construct(null, $initialData);
+		}
+
 		protected function valueIsValid($value) {
 			return $value instanceof EntityMapping;
 		}

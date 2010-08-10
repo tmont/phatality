@@ -3,12 +3,13 @@
 	namespace Phatality\Sample;
 
 	use Phatality\Mapping\EntityMapping;
+	use Phatality\Mapping\PropertyMapperFactory;
 	use Phatality\Persistence\PersisterRegistry;
 
 	class PostEntityMapping extends EntityMapping {
 
-		public function __construct(PersisterRegistry $persisterRegistry) {
-			parent::__construct(new PostData(), $persisterRegistry);
+		public function __construct(PersisterRegistry $persisterRegistry, PropertyMapperFactory $mapperFactory = null) {
+			parent::__construct(new PostData(), $persisterRegistry, $mapperFactory);
 		}
 
 		protected function getColumnMappings() {

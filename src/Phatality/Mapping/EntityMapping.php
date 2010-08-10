@@ -8,17 +8,19 @@
 	use Phatality\Id\StaticIdGeneratorFactory;
 	use Phatality\Util;
 
-	abstract class EntityMapping implements Serializable, IdGeneratorFactory, PropertyMapperFactory {
+	abstract class EntityMapping implements Serializable, IdGeneratorFactory {
 
 		private $persisterRegistry;
 		private $idGenerator;
 		private $sourceData;
+		private $propertyMapperFactory;
 
 		const ThisPrefix = '_this';
 
-		protected function __construct(SourceData $sourceData, PersisterRegistry $persisterRegistry) {
+		protected function __construct(SourceData $sourceData, PersisterRegistry $persisterRegistry, PropertyMapperFactory $mapperFactory = null) {
 			$this->persisterRegistry = $persisterRegistry;
 			$this->sourceData = $sourceData;
+			$this->propertyMapperFactory = $mapperFactory ?: new DefaultPropertyMapperFactory();
 		}
 
 		/**
@@ -29,17 +31,18 @@
 		}
 
 		/**
-		 * @param object $object
+		 * @param object $entity
 		 * @param array $data
+		 * @param EntityMap $entityMap
 		 * @return object
 		 */
-		public function loadEntity($object, array $data, EntityMap $entityMap) {
+		public function loadEntity($entity, array $data, EntityMap $entityMap) {
 			$columnMappings = $this->getColumnMappings();
 			$accessorFactory = new PropertyAccessorFactory();
 			$defaultSetter = $accessorFactory->getSetter($this->getDefaultSetterType());
 
-			$propertyMapper = $this->getPropertyMapper(MapperType::Property, $object, $entityMap);
-			$manyToOneMapper = $this->getPropertyMapper(MapperType::ManyToOne, $object, $entityMap);
+			$propertyMapper = $this->propertyMapperFactory->getPropertyMapper(MapperType::Property, $entity, $entityMap);
+			$manyToOneMapper = $this->propertyMapperFactory->getPropertyMapper(MapperType::ManyToOne, $entity, $entityMap);
 
 			foreach (Util::parseDataByPrefix($data, self::ThisPrefix) as $column => $value) {
 				if (!isset($columnMappings[$column])) {
@@ -62,18 +65,7 @@
 				}
 			}
 
-			return $object;
-		}
-
-		public function getPropertyMapper($mapperType, $entity, EntityMap $entityMap) {
-			switch ($mapperType) {
-				case MapperType::Property:
-			        return new DirectValueMapper($entity);
-				case MapperType::ManyToOne:
-			        return new ManyToOneMapper($entity, $entityMap);
-				default:
-			        throw new InvalidArgumentException('Unknown mapper type: ' . $mapperType);
-			}
+			return $entity;
 		}
 
 		/**
