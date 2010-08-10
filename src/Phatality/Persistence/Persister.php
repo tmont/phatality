@@ -29,7 +29,7 @@
 		 */
 		function load($id, $type);
 		
-		function fetchAll($id, $type);
+		function fetchAll($type);
 		function insertOrUpdate(Entity $entity);
 		function replace(Entity $entity);
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Phatality\Tests;
+	namespace Phatality\Tests;
 
 	use Phatality\Sample\User;
 	use Phatality\Sample\Post;
@@ -28,8 +28,11 @@ namespace Phatality\Tests;
 			$directValueMapper->expects($this->at(1))->method('map')->with('title', 'This is the title', 'string');
 			$directValueMapper->expects($this->at(2))->method('map')->with('postData', 'This is the post', 'string');
 
+			$collectionMapper = $this->getMock('Phatality\Mapping\PropertyMapper');
+
 			$mapperFactory = $this->getMock('Phatality\Mapping\PropertyMapperFactory');
 			$mapperFactory->expects($this->at(0))->method('getPropertyMapper')->with(MapperType::Property)->will($this->returnValue($directValueMapper));
+			$mapperFactory->expects($this->at(2))->method('getPropertyMapper')->with(MapperType::Collection)->will($this->returnValue($collectionMapper));
 
 			$persisterRegistry = new PersisterRegistry(new Config(array()));
 			$mapping = new PostEntityMapping($persisterRegistry, $mapperFactory);
@@ -51,6 +54,29 @@ namespace Phatality\Tests;
 
 			$mapperFactory = $this->getMock('Phatality\Mapping\PropertyMapperFactory');
 			$mapperFactory->expects($this->at(1))->method('getPropertyMapper')->with(MapperType::ManyToOne)->will($this->returnValue($manyToOneMapper));
+
+			$persisterRegistry = new PersisterRegistry(new Config(array()));
+			$mapping = new PostEntityMapping($persisterRegistry, $mapperFactory);
+
+			$entityMap = new EntityMap();
+			$returnedEntity = $mapping->loadEntity($entity, $dataFromDb, $entityMap);
+
+			self::assertSame($entity, $returnedEntity);
+		}
+
+		public function testMappingCollection() {
+			$entity = new Post();
+			$dataFromDb = array(
+				'_this.post_id' => '1'
+			);
+
+			$propertyMapper = $this->getMock('Phatality\Mapping\PropertyMapper');
+			$collectionMapper = $this->getMock('Phatality\Mapping\PropertyMapper');
+			$collectionMapper->expects($this->once())->method('map')->with('comments', '1', 'Phatality\Sample\Comment');
+
+			$mapperFactory = $this->getMock('Phatality\Mapping\PropertyMapperFactory');
+			$mapperFactory->expects($this->at(0))->method('getPropertyMapper')->with(MapperType::Property)->will($this->returnValue($propertyMapper));
+			$mapperFactory->expects($this->at(2))->method('getPropertyMapper')->with(MapperType::Collection)->will($this->returnValue($collectionMapper));
 
 			$persisterRegistry = new PersisterRegistry(new Config(array()));
 			$mapping = new PostEntityMapping($persisterRegistry, $mapperFactory);
@@ -177,4 +203,4 @@ namespace Phatality\Tests;
 
 	}
 
-	?>
+?>

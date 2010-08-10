@@ -37,29 +37,34 @@
 		 * @return object
 		 */
 		public function loadEntity($entity, array $data, EntityMap $entityMap) {
-			$columnMappings = $this->getColumnMappings();
+			$propertyMappings = $this->getPropertyMappings();
 			$accessorFactory = new PropertyAccessorFactory();
 			$defaultSetter = $accessorFactory->getSetter($this->getDefaultSetterType());
 
 			$propertyMapper = $this->propertyMapperFactory->getPropertyMapper(MapperType::Property, $entity, $entityMap);
 			$manyToOneMapper = $this->propertyMapperFactory->getPropertyMapper(MapperType::ManyToOne, $entity, $entityMap);
+			$collectionMapper = $this->propertyMapperFactory->getPropertyMapper(MapperType::Collection, $entity, $entityMap);
 
-			foreach (Util::parseDataByPrefix($data, self::ThisPrefix) as $column => $value) {
-				if (!isset($columnMappings[$column])) {
+			$thisData = Util::parseDataByPrefix($data, self::ThisPrefix);
+			foreach ($propertyMappings as $propertyName => $propertyData) {
+				if (!isset($thisData[$propertyData['column']])) {
 					continue;
 				}
 
-				$mapData = $columnMappings[$column];
-				$setter = isset($mapData['setter']) ? $accessorFactory->getSetter($mapData['setter']) : $defaultSetter;
-				$targetType = isset($mapData['type']) ? $mapData['type'] : 'string';
+				$value = $thisData[$propertyData['column']];
+				$setter = isset($propertyData['setter']) ? $accessorFactory->getSetter($propertyData['setter']) : $defaultSetter;
+				$targetType = isset($propertyData['type']) ? $propertyData['type'] : 'string';
 
-				switch ($mapData['mapping']) {
+				switch ($propertyData['mapping']) {
 					case MapperType::Property:
-						$propertyMapper->map($mapData['name'], $value, $targetType, $setter, $data);
+						$propertyMapper->map($propertyName, $value, $targetType, $setter, $data);
 						break;
 					case MapperType::ManyToOne:
-						$manyToOneMapper->map($mapData['name'], $value, $targetType, $setter, $data);
+						$manyToOneMapper->map($propertyName, $value, $targetType, $setter, $data);
 						break;
+					case MapperType::Collection:
+						$collectionMapper->map($propertyName, $value, $targetType, $setter, $data);
+				        break;
 					default:
 						throw new Exception('Not implemented yet');
 				}
@@ -71,7 +76,7 @@
 		/**
 		 * @return array
 		 */
-		protected abstract function getColumnMappings();
+		protected abstract function getPropertyMappings();
 
 		public abstract function getEntityType();
 

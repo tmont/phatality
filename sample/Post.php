@@ -1,6 +1,6 @@
 <?php
 
-namespace Phatality\Sample;
+	namespace Phatality\Sample;
 
 	use Phatality\Identifiable;
 
@@ -10,6 +10,7 @@ namespace Phatality\Sample;
 		private $user;
 		private $postData;
 		private $title;
+		private $comments = array();
 
 		public function getId() {
 			return $this->id;
@@ -17,6 +18,13 @@ namespace Phatality\Sample;
 
 		public function setId($id) {
 			$this->id = $id;
+		}
+
+		/**
+		 * @return array
+		 */
+		public function getComments() {
+			return $this->comments;
 		}
 
 		/**

@@ -9,5 +9,16 @@
 		<property name="status" column="post_status" setter="reflectedPrivateField" />
 		
 		<many-to-one name="user" class="Phatality\Sample\User" column="user_id"/>
+
+		<collection
+			name="comments"
+			setter="reflectedPrivateField"
+			collection-type="array"
+			class="Phatality\Sample\Comment"
+			key="post_id"
+			table="comments"
+			column="post_id"
+		/>
+		
 	</class>
 </phatality-mapping>

@@ -12,12 +12,13 @@
 			parent::__construct(new PostData(), $persisterRegistry, $mapperFactory);
 		}
 
-		protected function getColumnMappings() {
+		protected function getPropertyMappings() {
 			return array(
-				'post_id' => array('name' => 'id', 'mapping' => 'property', 'type' => 'int'),
-				'user_id' => array('name' => 'user', 'mapping' => 'many-to-one', 'type' => 'Phatality\Sample\User'),
-				'title' => array('name' => 'title', 'mapping' => 'property'),
-				'postdata' => array('name' => 'postData', 'mapping' => 'property')
+				'id' => array('column' => 'post_id', 'mapping' => 'property', 'type' => 'int'),
+				'user' => array('column' => 'user_id', 'mapping' => 'many-to-one', 'type' => 'Phatality\Sample\User'),
+				'title' => array('column' => 'title', 'mapping' => 'property'),
+				'postData' => array('column' => 'postdata', 'mapping' => 'property'),
+				'comments' => array('mapping' => 'collection', 'type' => 'Phatality\Sample\Comment', 'table' => 'comments', 'column' => 'post_id', 'key' => 'post_id')
 			);
 		}
 

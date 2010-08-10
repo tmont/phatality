@@ -146,6 +146,16 @@
 									<xs:attribute name="class" type="xs:string" use="required"/>
 								</xs:complexType>
 							</xs:element>
+
+							<xs:element name="collection" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attributeGroup ref="propertyMappingAttributes"/>
+									<xs:attribute name="table" use="required" type="xs:string"/>
+									<xs:attribute name="class" use="required" type="xs:string"/>
+									<xs:attribute name="collection-type" type="xs:string" fixed="array" use="required"/>
+									<xs:attribute name="key" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
 						</xs:sequence>
 						
 						<xs:attribute ref="name" use="required"/>

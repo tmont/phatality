@@ -3,6 +3,10 @@
 	namespace Phatality\Persistence;
 
 	interface Connection {
+		/**
+		 * @param string $query
+		 * @return Statement
+		 */
 		function prepare($query);
 		function isValid();
 		function disconnect();

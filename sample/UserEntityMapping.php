@@ -11,15 +11,15 @@
 			parent::__construct(new UserData(), $persisterRegistry);
 		}
 
-		protected function getColumnMappings() {
+		protected function getPropertyMappings() {
 			return array(
-				'user_id' => array('name' => 'id', 'mapping' => 'property', 'type' => 'int'),
-				'username' => array('name' => 'username', 'mapping' => 'property'),
-				'password' => array('name' => 'password', 'mapping' => 'property'),
-				'first_name' => array('name' => 'firstName', 'mapping' => 'property'),
-				'last_name' => array('name' => 'lastName', 'mapping' => 'property'),
-				'locale' => array('name' => 'locale', 'mapping' => 'property'),
-				'created' => array('name' => 'created', 'mapping' => 'property'),
+				'id' => array('column' => 'user_id', 'mapping' => 'property', 'type' => 'int'),
+				'username' => array('column' => 'username', 'mapping' => 'property'),
+				'password' => array('column' => 'password', 'mapping' => 'property', 'setter' => 'reflectedPrivateField'),
+				'firstName' => array('column' => 'first_name', 'mapping' => 'property'),
+				'lastName' => array('column' => 'last_name', 'mapping' => 'property'),
+				'locale' => array('column' => 'locale', 'mapping' => 'property'),
+				'created' => array('column' => 'created', 'mapping' => 'property', 'setter' => 'reflectedPrivateField'),
 			);
 		}
 

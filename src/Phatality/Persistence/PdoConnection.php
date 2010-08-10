@@ -24,6 +24,10 @@
 			return $this->pdo !== null;
 		}
 
+		/**
+		 * @param string $query
+		 * @return DbStatement
+		 */
 		public function prepare($query) {
 			return new DbStatement($this->pdo->prepare($query));
 		}

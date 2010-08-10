@@ -20,7 +20,7 @@
 		public function update(Entity $entity) {}
 		public function delete($id, $type) {}
 		public function load($id, $type) {}
-		public function fetchAll($id, $type) {}
+		public function fetchAll($type) {}
 		public function insertOrUpdate(Entity $entity) {}
 		public function replace(Entity $entity) {}
 
