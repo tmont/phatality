@@ -1,6 +1,8 @@
 <?php
 
 	namespace Phatality\Mapping;
+
+	use InvalidArgumentException;
 	
 	class DefaultPropertyMapperFactory implements PropertyMapperFactory {
 
@@ -11,7 +13,7 @@
 				case MapperType::ManyToOne:
 			        return new ManyToOneMapper($entity, $entityMap);
 				default:
-			        throw new InvalidArgumentException('Unknown mapper type: ' . $mapperType);
+			        throw new InvalidArgumentException('Unknown property mapper type: ' . $mapperType);
 			}
 		}
 	}

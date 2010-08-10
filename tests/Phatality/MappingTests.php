@@ -1,6 +1,6 @@
 <?php
 
-	namespace Phatality\Tests;
+namespace Phatality\Tests;
 
 	use Phatality\Sample\User;
 	use Phatality\Sample\Post;
@@ -11,6 +11,7 @@
 	use Phatality\Mapping\EntityMap;
 	use Phatality\Mapping\DirectValueMapper;
 	use Phatality\Mapping\ManyToOneMapper;
+	use Phatality\Mapping\DefaultPropertyMapperFactory;
 
 	class MappingTests extends \PHPUnit_Framework_TestCase {
 
@@ -29,6 +30,27 @@
 
 			$mapperFactory = $this->getMock('Phatality\Mapping\PropertyMapperFactory');
 			$mapperFactory->expects($this->at(0))->method('getPropertyMapper')->with(MapperType::Property)->will($this->returnValue($directValueMapper));
+
+			$persisterRegistry = new PersisterRegistry(new Config(array()));
+			$mapping = new PostEntityMapping($persisterRegistry, $mapperFactory);
+
+			$entityMap = new EntityMap();
+			$returnedEntity = $mapping->loadEntity($entity, $dataFromDb, $entityMap);
+
+			self::assertSame($entity, $returnedEntity);
+		}
+
+		public function testMappingManyToOne() {
+			$entity = new Post();
+			$dataFromDb = array(
+				'_this.user_id' => '1',
+			);
+
+			$manyToOneMapper = $this->getMock('Phatality\Mapping\PropertyMapper');
+			$manyToOneMapper->expects($this->once())->method('map')->with('user', '1', 'Phatality\Sample\User');
+
+			$mapperFactory = $this->getMock('Phatality\Mapping\PropertyMapperFactory');
+			$mapperFactory->expects($this->at(1))->method('getPropertyMapper')->with(MapperType::ManyToOne)->will($this->returnValue($manyToOneMapper));
 
 			$persisterRegistry = new PersisterRegistry(new Config(array()));
 			$mapping = new PostEntityMapping($persisterRegistry, $mapperFactory);
@@ -104,7 +126,7 @@
 			$errorMessage =
 				'Invalid primary key for entity "Phatality\Sample\User": cannot establish many-to-one relationship with ' .
 				'entity "Phatality\Sample\Post" because a suitable key was not found';
-			
+
 			$this->setExpectedException('Phatality\Mapping\MappingException', $errorMessage);
 			$mapper = new ManyToOneMapper($entity, $entityMap);
 			$mapper->map('user', '3', 'Phatality\Sample\User', $setter, $dataFromDb);
@@ -140,27 +162,19 @@
 			$mapper->map('user', '3', 'Phatality\Sample\User', $setter, $dataFromDb);
 		}
 
-		public function testMappingManyToOne() {
-			$entity = new Post();
-			$dataFromDb = array(
-				'_this.user_id' => '1',
-			);
+		public function testDefaultPropertyMapperFactory() {
+			$factory = new DefaultPropertyMapperFactory();
+			self::assertType('Phatality\Mapping\DirectValueMapper', $factory->getPropertyMapper(MapperType::Property, null, new EntityMap()));
+			self::assertType('Phatality\Mapping\ManyToOneMapper', $factory->getPropertyMapper(MapperType::ManyToOne, null, new EntityMap()));
+		}
 
-			$manyToOneMapper = $this->getMock('Phatality\Mapping\PropertyMapper');
-			$manyToOneMapper->expects($this->once())->method('map')->with('user', '1', 'Phatality\Sample\User');
+		public function testDefaultPropertyMapperFactoryWithUnknownType() {
+			$this->setExpectedException('InvalidArgumentException', 'Unknown property mapper type: foo');
 
-			$mapperFactory = $this->getMock('Phatality\Mapping\PropertyMapperFactory');
-			$mapperFactory->expects($this->at(1))->method('getPropertyMapper')->with(MapperType::ManyToOne)->will($this->returnValue($manyToOneMapper));
-
-			$persisterRegistry = new PersisterRegistry(new Config(array()));
-			$mapping = new PostEntityMapping($persisterRegistry, $mapperFactory);
-
-			$entityMap = new EntityMap();
-			$returnedEntity = $mapping->loadEntity($entity, $dataFromDb, $entityMap);
-
-			self::assertSame($entity, $returnedEntity);
+			$factory = new DefaultPropertyMapperFactory();
+			$factory->getPropertyMapper('foo', null, new EntityMap());
 		}
 
 	}
 
-?>
+	?>
